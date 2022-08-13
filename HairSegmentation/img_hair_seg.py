@@ -27,11 +27,10 @@ def build_model(checkpoint):
     return model
 
 
-def run(args, model, checkpoint):
-    img_path = args.image
+def run_img(img_path, model):
     model.eval()
 
-    transformer = ImgTransformer(args.imsize, color_aug=False)
+    transformer = ImgTransformer(448, color_aug=False)
     img, img_size = transformer.load_img(img_path)
     mask_pred = evaluateOne(img, model, absolute=True)
     mask_pred = cv2.resize(mask_pred, dsize=img_size, interpolation=cv2.INTER_LINEAR)
@@ -47,29 +46,25 @@ def run(args, model, checkpoint):
     cv2.imwrite(f"./outputs/{img_name}_masked_img.png", hair_masked_img)
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-cp", "--checkpoint")
-    parser.add_argument("-im", "--image")
-    parser.add_argument("--save_dir", type=str, default="checkpoints", help="folder for models")
-    parser.add_argument("--model_name", type=str, default="default", help="model name")
-    parser.add_argument("--imsize", type=int, default=448, help="training image size")
-    args = parser.parse_args()
+def img_hair_seg(img_path):
+    SAVE_PATH = os.path.join(DIR_PATH, "checkpoints", "default")
+    print("Saving path:", SAVE_PATH)
+    checkpoint_mng = CheckpointManager(SAVE_PATH)
 
-    print("args: ", args)
-
-    # SAVE_PATH = os.path.join(DIR_PATH, args.save_dir, args.model_name)
-    # print("Saving path:", SAVE_PATH)
-    # checkpoint_mng = CheckpointManager(SAVE_PATH)
-
-    checkpoint = None
-    if args.checkpoint:
-        print("Load checkpoint:", args.checkpoint)
-        checkpoint = checkpoint_mng.load(args.checkpoint, device)
+    print("Load checkpoint:", "train_16")
+    checkpoint = checkpoint_mng.load("train_16", device)
 
     model = build_model(checkpoint)
 
-    run(args, model, checkpoint)
+    run_img(img_path, model)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-im", "--image")
+    args = parser.parse_args()
+
+    img_hair_seg(args.image)
 
 
 if __name__ == "__main__":
