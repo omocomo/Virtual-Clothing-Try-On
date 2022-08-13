@@ -1,4 +1,4 @@
-### Hair Segmentation
+## Hair Segmentation
 ![image](https://user-images.githubusercontent.com/39791467/184470556-51ff7ede-5eed-420c-9583-f11f78bd8ac3.png)
 
 ### Download Trained Model
