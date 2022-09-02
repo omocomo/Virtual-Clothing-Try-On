@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_clothing_try_on/data/items.dart';
 import 'package:dio/dio.dart';
-
-import '../data/users.dart';
+import 'package:virtual_clothing_try_on/model/item.dart';
+import 'package:virtual_clothing_try_on/model/user.dart';
 
 class TryOnPage extends StatefulWidget {
   final Item info;
-  final int n;
-  TryOnPage({required this.info, required this.n});
+  final User user;
+  TryOnPage({required this.info, required this.user});
 
   @override
   State<TryOnPage> createState() => _TryOnPageState();
@@ -84,13 +83,13 @@ class _TryOnPageState extends State<TryOnPage> {
   Future GetTryOn() async {
     _changed(false, "output");
 
-    print(widget.info.image);
-    print(users[widget.n]['image']);
+    // print(widget.info.image);
+    // print(widget.user.image);
 
     var dio = Dio();
     var formData = {
       'model_image': widget.info.image.toString(),
-      'user_image': users[widget.n]['image'].toString(),
+      'user_image': widget.user.image.toString(),
     };
 
 

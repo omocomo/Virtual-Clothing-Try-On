@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_clothing_try_on/data/items.dart';
+import 'package:virtual_clothing_try_on/model/item.dart';
+import 'package:virtual_clothing_try_on/model/user.dart';
 import 'package:virtual_clothing_try_on/pages/tryon.dart';
 
 class DetailPage extends StatelessWidget {
   final Item info;
-  final int n;
-  DetailPage({required this.info, required this.n});
+  final User user;
+  DetailPage({required this.info, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +171,7 @@ class DetailPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => TryOnPage(info: info, n: n)));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => TryOnPage(info: info, user: user)));
                           },
                         ),
                       ),

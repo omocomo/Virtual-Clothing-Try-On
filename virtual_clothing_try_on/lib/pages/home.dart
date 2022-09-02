@@ -1,15 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:virtual_clothing_try_on/model/item.dart';
+import 'package:virtual_clothing_try_on/model/user.dart';
 import 'package:virtual_clothing_try_on/pages/login.dart';
 import 'package:virtual_clothing_try_on/pages/profile.dart';
 import 'package:virtual_clothing_try_on/pages/detail.dart';
-import 'package:virtual_clothing_try_on/data/items.dart';
-import 'package:virtual_clothing_try_on/data/users.dart';
 
 class HomePage extends StatelessWidget {
   // final User user;
   // HomePage({required this.user});
-  final int n;
-  HomePage({required this.n});
+  final User user;
+  HomePage({required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class HomePage extends StatelessWidget {
                   color: Colors.white,
                 ),
                 onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(n: n)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(user: user)));
                 },
               ),
             ],
@@ -79,22 +80,35 @@ class HomePage extends StatelessWidget {
               height: 10.0,
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return _buildItems(context, index);
-                },
-              childCount: 100,
-            ),
-          ),
+          StreamBuilder<List<Item>>(
+            stream: readItems(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return SliverToBoxAdapter(child: Text('Something went wrong!'),);
+              } else if (snapshot.hasData) {
+                final items = snapshot.data!;
+                return SliverList(
+                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                      return _buildItems(context, items[index]);},
+                    childCount: items.length
+                  )
+                );
+            } else {
+              return SliverToBoxAdapter(child: Text('No Data'),);
+            }
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildItems(BuildContext context, int index) {
-    var item = items[index % items.length];
-    Item info = Item(item['id'], item['star'], item['review'], item['price'], item['image'], item['title'], item['color'], item['addition'], item['description']);
+  Stream<List<Item>> readItems() => FirebaseFirestore.instance
+      .collection('items')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Item.fromJson(doc.data())).toList());
+
+  Widget _buildItems(BuildContext context, Item item) {
     return Container(
       margin: EdgeInsets.all(20.0),
       child: ClipRRect(
@@ -109,7 +123,7 @@ class HomePage extends StatelessWidget {
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    Image.asset(item['image']),
+                    Image.asset(item.image),
                     Positioned(
                       right: 10,
                       top: 10,
@@ -120,7 +134,7 @@ class HomePage extends StatelessWidget {
                           size: 24.0,
                         ),
                         onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(info: info, n: n)));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(info: item, user: user)));
                         },
                       ),
                     ),
@@ -130,7 +144,7 @@ class HomePage extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.all(10.0),
                         color: Colors.white,
-                        child: Text(info.price.toString()),
+                        child: Text(item.price.toString()),
                       ),
                     ),
                   ],
@@ -141,7 +155,7 @@ class HomePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        item['title'],
+                        item.title,
                         style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -151,7 +165,7 @@ class HomePage extends StatelessWidget {
                         height: 5.0,
                       ),
                       Text(
-                        item['addition'],
+                        item.addition,
                       ),
                       SizedBox(
                         height: 10.0,
@@ -167,7 +181,7 @@ class HomePage extends StatelessWidget {
                           Icon(Icons.star_border, color: Color(0xffff3a5a),),
                           SizedBox(width: 5.0,),
                           Text(
-                            "(" + item['review'].toString() + " reviews)",
+                            "(" + item.review.toString() + " reviews)",
                             style: TextStyle(
                               color: Colors.grey,
                             ),

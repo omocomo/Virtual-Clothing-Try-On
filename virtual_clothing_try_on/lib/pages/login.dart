@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:virtual_clothing_try_on/model/user.dart';
 import 'package:virtual_clothing_try_on/pages/home.dart';
-import 'package:virtual_clothing_try_on/data/users.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,6 +10,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final controllerEmail = TextEditingController();
+  final controllerPasswd = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -96,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
               elevation: 2.0,
               borderRadius: BorderRadius.all(Radius.circular(30)),
               child: TextField(
+                controller: controllerEmail,
                 onChanged: (String value){},
                 cursorColor: Colors.deepOrange,
                 decoration: InputDecoration(
@@ -123,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
               elevation: 2.0,
               borderRadius: BorderRadius.all(Radius.circular(30)),
               child: TextField(
+                controller: controllerPasswd,
                 onChanged: (String value){},
                 obscureText: true,
                 cursorColor: Colors.deepOrange,
@@ -162,10 +168,38 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 onPressed: () {
-                  int n = 1;
-                  // User user = User(users[n]['image'].toString(), users[n]['username'].toString(), users[n]['email'].toString(), users[n]['password'].toString(), users[n]['address'].toString());
-                  Navigator.pop(context);
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(n: n)));
+                  availableCheck(controllerEmail.text, controllerPasswd.text).then((value) async {
+                    if (value != 'false') {
+                      var UserDB = await FirebaseFirestore.instance.collection('users').doc(value).get();
+                      var json = UserDB.data();
+                      User nowUser = User.fromJson(json!);
+                      Navigator.pop(context);
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: nowUser)));
+                    }
+                    else {
+                      // set up the button
+                      Widget okButton = TextButton(
+                        child: Text("OK"),
+                        onPressed: () {Navigator.of(context).pop();},
+                      );
+
+                      AlertDialog alert = AlertDialog(
+                        title: Text("Login Failed"),
+                        content: Text("ID or password does not match."),
+                        actions: [
+                          okButton,
+                        ],
+                      );
+
+                      // show the dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return alert;
+                        },
+                      );
+                    }
+                  });
                 },
               ),
             ),
@@ -212,6 +246,23 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+Future<String> availableCheck(String email, String passwd) async {
+  final QuerySnapshot result = await FirebaseFirestore.instance
+    .collection('users')
+    .where('email', isEqualTo: email)
+    .limit(1)
+    .get();
+  final List<DocumentSnapshot> documents = result.docs;
+  if (documents.length == 1) {
+    if (passwd == documents.first.get('password')) {
+      return documents.first.get('id');
+    }
+    return 'false'; // 비밀번호가 틀린 경우
+  }
+  // id가 존재하지 않는 경우
+  return 'false';
 }
 
 class WaveClipper1 extends CustomClipper<Path> {

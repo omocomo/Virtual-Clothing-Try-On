@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_clothing_try_on/data/users.dart';
+import 'package:virtual_clothing_try_on/model/user.dart';
 
 // final user = {
 //   "username": "눈송이",
@@ -11,8 +11,8 @@ import 'package:virtual_clothing_try_on/data/users.dart';
 class ProfilePage extends StatefulWidget {
   // final User user;
   // ProfilePage({required this.user});
-  final int n;
-  ProfilePage({required this.n});
+  final User user;
+  ProfilePage({required this.user});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -20,6 +20,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool showPassword = false;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: AssetImage(users[widget.n]['image']),
+                          image: AssetImage(widget.user.image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -163,10 +167,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     onPressed: () {
                       print(_controller1.text);
-                      users[widget.n]['username'] = _controller1.text;
-                      users[widget.n]['email'] = _controller2.text;
-                      users[widget.n]['password'] = _controller3.text;
-                      users[widget.n]['address'] = _controller4.text;
+                      widget.user.username = _controller1.text;
+                      widget.user.email = _controller2.text;
+                      widget.user.password = _controller3.text;
+                      widget.user.address = _controller4.text;
                       Navigator.pop(context);
                     },
                   ),
@@ -179,10 +183,10 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  late TextEditingController _controller1 = TextEditingController(text: users[widget.n]['username']);
-  late TextEditingController _controller2 = TextEditingController(text: users[widget.n]['email']);
-  late TextEditingController _controller3 = TextEditingController(text: users[widget.n]['password']);
-  late TextEditingController _controller4 = TextEditingController(text: users[widget.n]['address']);
+  late TextEditingController _controller1 = TextEditingController(text: widget.user.username);
+  late TextEditingController _controller2 = TextEditingController(text: widget.user.email);
+  late TextEditingController _controller3 = TextEditingController(text: widget.user.password);
+  late TextEditingController _controller4 = TextEditingController(text: widget.user.address);
   Widget buildTextField(TextEditingController _controller, String labelText, bool isPasswordTextField) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
