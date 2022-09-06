@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_clothing_try_on/model/user.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:virtual_clothing_try_on/routes/request.dart';
 
 // final user = {
 //   "username": "눈송이",
@@ -25,8 +27,11 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
   }
 
+  String user_image_url = '';
+
   @override
   Widget build(BuildContext context) {
+    user_image_url = 'http://localhost:8000/${widget.user.image}';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -91,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: AssetImage(widget.user.image),
+                          image: NetworkImage(user_image_url),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -110,9 +115,70 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           color: Color(0xffff3a5a),
                         ),
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.white,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.edit, 
+                            size: 17,
+                            color: Colors.white,
+                          ), 
+                          onPressed: () { 
+                            AlertDialog alert = AlertDialog(
+                              title: const Text('옵션을 선택해주세요'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      _getFromCamera();
+                                    },
+                                    child: Row(
+                                      children: const [
+                                        Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: Icon(
+                                            Icons.camera,
+                                            // color: Colors.purple
+                                          ),
+                                        ),
+                                        Text(
+                                          'Camera',
+                                           // style: TextStyle(color:Colors.purple),
+                                        )
+                                      ]
+                                    ),
+                                  ),
+                                  SizedBox(height: 20,),
+                                  InkWell(
+                                    onTap: () {
+                                      _getFromGallery();
+                                    },
+                                    child: Row(
+                                      children: const [
+                                        Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: Icon(
+                                            Icons.image,
+                                            // color: Colors.purple
+                                          ),
+                                        ),
+                                        Text(
+                                          'Gallery',
+                                           // style: TextStyle(color:Colors.purple),
+                                        )
+                                      ]
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                            // show the dialog
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return alert;
+                              },
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -157,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: EdgeInsets.symmetric(horizontal: 60),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
-                    child: Text(
+                    child: const Text(
                       "저장",
                       style: TextStyle(
                         color: Colors.white,
@@ -182,6 +248,23 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
+  void _getFromCamera() async {
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    // 사용자 이미지 서버에 저장
+    await uploadUserImage(pickedFile!, widget.user.image);
+    // setState(() {
+    //   user_image_url = 'http://localhost:8000/${widget.user.image}';
+    // });
+    Navigator.pop(context);
+  } 
+
+  void _getFromGallery() async {
+    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    // 사용자 이미지 서버에 저장
+    uploadUserImage(pickedFile!, widget.user.image);
+    Navigator.pop(context);
+  } 
 
   late TextEditingController _controller1 = TextEditingController(text: widget.user.username);
   late TextEditingController _controller2 = TextEditingController(text: widget.user.email);

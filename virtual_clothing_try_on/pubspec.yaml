@@ -49,6 +49,8 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   dio:
   file_picker:
+  image_picker:
+  image_cropper:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

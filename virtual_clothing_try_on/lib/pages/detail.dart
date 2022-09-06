@@ -38,8 +38,8 @@ class DetailPage extends StatelessWidget {
             foregroundDecoration: BoxDecoration(
               color: Colors.black26
             ),
-            child: Image.asset(
-              info.image,
+            child: Image.network(
+              'http://localhost:8000/${info.image}',
               fit: BoxFit.cover,
             ),
           ),

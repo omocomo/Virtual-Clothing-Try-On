@@ -123,7 +123,7 @@ class HomePage extends StatelessWidget {
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    Image.asset(item.image),
+                    Image.network('http://121.161.149.44:8000/${item.image}'),
                     Positioned(
                       right: 10,
                       top: 10,
