@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:virtual_clothing_try_on/model/item.dart';
 import 'package:virtual_clothing_try_on/model/user.dart';
-import 'package:virtual_clothing_try_on/pages/tryon.dart';
+import 'package:virtual_clothing_try_on/widgets/detail_image.dart';
 
 class DetailPage extends StatelessWidget {
   final Item info;
@@ -39,7 +39,7 @@ class DetailPage extends StatelessWidget {
               color: Colors.black26
             ),
             child: Image.network(
-              'http://localhost:8000/${info.image}',
+              'http://localhost:8000/${info.image[0]}',
               fit: BoxFit.cover,
             ),
           ),
@@ -153,30 +153,7 @@ class DetailPage extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(
-                        height: 30.0,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                            primary: Color(0xffff3a5a),
-                            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                          ),
-                          child: Text(
-                            "입어보기",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.normal
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => TryOnPage(info: info, user: user)));
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30.0,
+                        height: 60.0,
                       ),
                       Text(
                         "상품 설명",
@@ -186,14 +163,20 @@ class DetailPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        height: 10.0,
+                        height: 20.0,
                       ),
-                      Text(
-                        info.description,
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w300,
+                      // detail_image 위젯 여러 개 띄우기
+
+                      SizedBox(
+                        // height: 100,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(0),
+                          itemCount: info.image.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return DetailImage(user_image: user.image, item_image: info.image[index], item_tag: info.tag[index], item_description: info.description[index]);
+                          },
                         ),
                       ),
                     ],

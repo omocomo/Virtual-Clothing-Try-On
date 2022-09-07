@@ -4,9 +4,8 @@ import 'package:virtual_clothing_try_on/model/item.dart';
 import 'package:virtual_clothing_try_on/model/user.dart';
 
 class TryOnPage extends StatefulWidget {
-  final Item info;
-  final User user;
-  TryOnPage({required this.info, required this.user});
+  final String item_image, user_image;
+  TryOnPage({required this.item_image, required this.user_image});
 
   @override
   State<TryOnPage> createState() => _TryOnPageState();
@@ -21,7 +20,7 @@ class _TryOnPageState extends State<TryOnPage> {
 
   bool _output_visibility = false;
   String outputName = '';
-  var server = 'localhost'; // 0.0.0.0
+  var server = '121.161.149.44'; // 0.0.0.0
 
   void _changed(bool visibility, String field) {
     setState(() {
@@ -88,8 +87,8 @@ class _TryOnPageState extends State<TryOnPage> {
 
     var dio = Dio();
     var formData = {
-      'model_image': widget.info.image.toString(),
-      'user_image': widget.user.image.toString(),
+      'model_image': widget.item_image,
+      'user_image': widget.user_image,
     };
 
 
