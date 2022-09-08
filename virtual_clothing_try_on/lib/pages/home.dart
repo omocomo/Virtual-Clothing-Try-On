@@ -81,7 +81,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
           StreamBuilder<List<Item>>(
-            stream: readItems(),
+            stream: user.gender == '남자' ? readItems('man_items') : readItems('woman_items'),
             builder: (context, snapshot) {
 
               if (snapshot.hasError) {
@@ -103,8 +103,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Stream<List<Item>> readItems() => FirebaseFirestore.instance
-      .collection('man_items')
+  Stream<List<Item>> readItems(String gender_items) => FirebaseFirestore.instance
+      .collection(gender_items)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Item.fromJson(doc.data())).toList());
