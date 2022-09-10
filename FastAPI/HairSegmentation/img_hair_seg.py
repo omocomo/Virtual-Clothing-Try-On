@@ -45,8 +45,8 @@ def run_img(img_path, model):
 
     # cv2.imwrite(f"./outputs/{img_name}_hair_mask.png", mask_pred)
     # cv2.imwrite(f"./outputs/{img_name}_original_img.png", original_img)
-    print(f"../DATA/hair/{img_name}.{ex}")
-    cv2.imwrite(f"../DATA/hair/{img_name}.{ex}", hair_masked_img)
+    print(f"./DATA/hair/{img_name}.{ex}")
+    cv2.imwrite(f"./DATA/hair/{img_name}.{ex}", hair_masked_img)
 
 
 def img_hair_seg(img_path):
@@ -71,4 +71,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    for i in range(1, 12):
+        img_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/user/woman_{str(i).zfill(3)}.jpg'
+        img_hair_seg(img_path)

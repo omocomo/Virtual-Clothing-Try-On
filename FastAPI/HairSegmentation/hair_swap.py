@@ -17,7 +17,7 @@ def ReadImage(img_path):
     image = cv2.imread(img_path)
 
     with mp_face_detection.FaceDetection(
-            min_detection_confidence=0.5, model_selection=0) as face_detection:
+            min_detection_confidence=0.5, model_selection=1) as face_detection: # model_selection - 1: 전신 모델, 0: 2m 이내
 
         # BGR 이미지를 RGB로 변환하고 MediaPipe face detection 처리
         results = face_detection.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
@@ -111,12 +111,12 @@ def HairSwap(user_img_path, model_img_path, user_hair_mask_path):
 
     # 사용자와 모델의 distance가 같아지도록 사용자 이미지, 머리카락 마스크 비율 조절
     scale = model_distance / user_distance
-    user_hair_mask = cv2.imread(user_hair_mask_path)
-    resized_user_img = ResizeImage(user_img, scale)
+    user_hair_mask = cv2.imread(user_hair_mask_path, cv2.IMREAD_UNCHANGED)
+    # resized_user_img = ResizeImage(user_img, scale)
     resized_hair_mask = ResizeImage(user_hair_mask, scale)
 
     # 크기 조절한 머리카락 마스크 다듬기
-    resized_hair_mask = cv2.medianBlur(resized_hair_mask, 15)
+    # resized_hair_mask = cv2.medianBlur(resized_hair_mask, 15)
 
     # 크기 조절한 머리카락 마스크의 너비, 높이 구하기
     height, width, _ = resized_hair_mask.shape
@@ -130,23 +130,38 @@ def HairSwap(user_img_path, model_img_path, user_hair_mask_path):
     start_y = model_right_pos[1] - user_y
 
     # 투명도 채널 추가하기
-    model_img = AddAlphaChannel(model_img)
-    resized_user_img = AddAlphaChannel(resized_user_img)
+    # model_img = AddAlphaChannel(model_img)
+    # resized_user_img = AddAlphaChannel(resized_user_img)
 
     # for문 돌려서 모델 사진에 사용자 머리카락 붙이기
     for h in range (start_y, start_y + height):
         for w in range(start_x, start_x + width):
-            if (resized_hair_mask[h - start_y, w - start_x] > (0, 0, 0)).all():
-                if (resized_hair_mask[h - start_y, w - start_x] < (5, 5, 5)).all():
-                    resized_user_img[h - start_y, w - start_x][3] = 230
-                for i in range(0, 4):
-                    model_img[h, w][i] = resized_user_img[h - start_y, w - start_x][i]
+            alpha = resized_hair_mask[h - start_y, w - start_x][3] / 255.0
+            for i in range(0, 3):
+                model_img[h, w][i] = model_img[h, w][i] * (1.0 - alpha) + resized_hair_mask[h - start_y, w - start_x][i] * alpha
+
+    # User 눈 위치 확인하기
+    # cv2.circle(user_img, user_right_pos, 3, (255,0,0), thickness=-1, lineType=None, shift=None)
+    # cv2.circle(user_img, user_left_pos, 3, (255,0,0), thickness=-1, lineType=None, shift=None)
+    # Model 눈 위치 확인하기
+    # cv2.circle(model_img, model_right_pos, 3, (0,0,255), thickness=-1, lineType=None, shift=None)
+    # cv2.circle(model_img, model_left_pos, 3, (0,0,255), thickness=-1, lineType=None, shift=None)
+    # cv2.imwrite(f"./DATA/output/{img_name}_{model_name}_user.png", user_img)
 
     # 사용자 머리카락 붙인 모델 사진 저장하기
     # 경로명 나중에 수정할 것: model + user
     model_name = model_img_path.split('/')[-1].split('.')[0]
     img_name = user_img_path.split('/')[-1].split('.')[0]
-    # cv2.imwrite(f"C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/output/{img_name}_result.png", model_img)
     cv2.imwrite(f"./DATA/output/{img_name}_{model_name}_result.png", model_img)
-
+    
     return f"{img_name}_{model_name}_result.png"
+
+
+if __name__ == "__main__":
+
+    for i in range(1, 43):
+        user_img_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/user/sbsb.png'
+        model_img_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/swap/sb_{str(i).zfill(3)}.jpg'
+        user_hair_mask_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/hair/sbsb.png'
+        HairSwap(user_img_path, model_img_path, user_hair_mask_path)
+       
