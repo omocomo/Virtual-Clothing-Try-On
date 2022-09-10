@@ -41,7 +41,7 @@ class DetailImage extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => TryOnPage(item_image: item_image, user_image: user_image)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => TryOnPage(item_tag: item_tag, item_image: item_image, user_image: user_image)));
             },
           ),
         ),
