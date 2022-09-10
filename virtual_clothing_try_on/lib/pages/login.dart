@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:virtual_clothing_try_on/model/user.dart';
 import 'package:virtual_clothing_try_on/pages/home.dart';
+import 'package:virtual_clothing_try_on/pages/signup.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -184,8 +185,8 @@ class _LoginPageState extends State<LoginPage> {
                       );
 
                       AlertDialog alert = AlertDialog(
-                        title: Text("Login Failed"),
-                        content: Text("ID or password does not match."),
+                        title: Text("로그인 실패"),
+                        content: Text("ID 또는 비밀번호가 일치하지 않습니다."),
                         actions: [
                           okButton,
                         ],
@@ -231,13 +232,18 @@ class _LoginPageState extends State<LoginPage> {
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              Text(
-                "회원가입",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.underline,
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUpPage()));
+                },
+                child: Text(
+                  "회원가입",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
             ],

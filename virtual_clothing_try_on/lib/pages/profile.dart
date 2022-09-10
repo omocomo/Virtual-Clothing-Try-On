@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_clothing_try_on/model/user.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,17 +24,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  XFile? pickedFile;
   bool showPassword = false;
+
   @override
   void initState() {
     super.initState();
   }
 
-  String user_image_url = '';
-
   @override
   Widget build(BuildContext context) {
-    user_image_url = 'http://localhost:8000/${widget.user.image}';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -78,7 +80,8 @@ class _ProfilePageState extends State<ProfilePage> {
               Center(
                 child: Stack(
                   children: [
-                    Container(
+                    (pickedFile == null)
+                    ? Container(
                       width: 130,
                       height: 130,
                       decoration: BoxDecoration(
@@ -96,8 +99,34 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(user_image_url),
+                          image: NetworkImage('http://localhost:8000/${widget.user.image}'),
                           fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                    : Container(
+                      width: 130,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 4,
+                            color: Theme.of(context).scaffoldBackgroundColor
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            spreadRadius: 2,
+                            blurRadius: 10,
+                            color: Colors.black.withOpacity(0.1),
+                            offset: Offset(0, 10),
+                          ),
+                        ],
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: FileImage(File(pickedFile!.path)),
+                          // image: (pickedFile != null)
+                          //     ? FileImage(File(pickedFile!.path))
+                          //     : AssetImage("assets/user_default.png"),
                         ),
                       ),
                     ),
@@ -231,12 +260,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         letterSpacing: 2.2,
                       ),
                     ),
-                    onPressed: () {
-                      print(_controller1.text);
+                    onPressed: () async {
                       widget.user.username = _controller1.text;
                       widget.user.email = _controller2.text;
                       widget.user.password = _controller3.text;
                       widget.user.address = _controller4.text;
+
+                      if (pickedFile != null)
+                        await uploadUserImage(pickedFile!, widget.user.image);
+                      updateUser(widget.user);
                       Navigator.pop(context);
                     },
                   ),
@@ -249,22 +281,33 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Future updateUser(User user) async {
+    final QuerySnapshot result = await FirebaseFirestore.instance.collection('users').where("id", isEqualTo: user.id).limit(1).get();
+    final id = result.docs.first.get('id');
+    final docUser = FirebaseFirestore.instance.collection('users').doc(id);
+    final json = user.toJson();
+    await docUser.update(json);
+  }
+
   void _getFromCamera() async {
-    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
-    // 사용자 이미지 서버에 저장
-    await uploadUserImage(pickedFile!, widget.user.image);
-    // setState(() {
-    //   user_image_url = 'http://localhost:8000/${widget.user.image}';
-    // });
+    XFile? tmp = await ImagePicker().pickImage(source: ImageSource.camera);
+
+    setState(() {
+      pickedFile = tmp;
+    });
+
     Navigator.pop(context);
-  } 
+  }
 
   void _getFromGallery() async {
-    XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    // 사용자 이미지 서버에 저장
-    uploadUserImage(pickedFile!, widget.user.image);
+    XFile? tmp = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      pickedFile = tmp;
+    });
+
     Navigator.pop(context);
-  } 
+  }
 
   late TextEditingController _controller1 = TextEditingController(text: widget.user.username);
   late TextEditingController _controller2 = TextEditingController(text: widget.user.email);

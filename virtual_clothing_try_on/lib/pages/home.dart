@@ -81,8 +81,9 @@ class HomePage extends StatelessWidget {
             ),
           ),
           StreamBuilder<List<Item>>(
-            stream: readItems(),
+            stream: user.gender == '남자' ? readItems('man_items') : readItems('woman_items'),
             builder: (context, snapshot) {
+
               if (snapshot.hasError) {
                 return SliverToBoxAdapter(child: Text('Something went wrong!'),);
               } else if (snapshot.hasData) {
@@ -102,8 +103,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Stream<List<Item>> readItems() => FirebaseFirestore.instance
-      .collection('items')
+  Stream<List<Item>> readItems(String gender_items) => FirebaseFirestore.instance
+      .collection(gender_items)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Item.fromJson(doc.data())).toList());
@@ -123,7 +124,7 @@ class HomePage extends StatelessWidget {
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    Image.network('http://121.161.149.44:8000/${item.image}'),
+                    Image.network('http://localhost:8000/${item.image[0]}'),
                     Positioned(
                       right: 10,
                       top: 10,
