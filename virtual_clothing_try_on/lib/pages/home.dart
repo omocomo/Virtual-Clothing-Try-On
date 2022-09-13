@@ -110,6 +110,11 @@ class HomePage extends StatelessWidget {
           snapshot.docs.map((doc) => Item.fromJson(doc.data())).toList());
 
   Widget _buildItems(BuildContext context, Item item) {
+    int item_star = (item.star - 1) % 5;
+    print(item.star);
+    print("별점: " + (item.star % 5).toString());
+
+
     return Container(
       margin: EdgeInsets.all(20.0),
       child: ClipRRect(
@@ -124,7 +129,7 @@ class HomePage extends StatelessWidget {
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    Image.network('http://localhost:8000/${item.image[0]}'),
+                    Image.network('http://localhost:8000/${item.image[0]}?v=${DateTime.now().millisecondsSinceEpoch}'),
                     Positioned(
                       right: 10,
                       top: 10,
@@ -175,11 +180,21 @@ class HomePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           // item['review'] 숫자에 따라 별점 다르게 표시해야 함
-                          Icon(Icons.star, color: Color(0xffff3a5a),),
-                          Icon(Icons.star, color: Color(0xffff3a5a),),
-                          Icon(Icons.star, color: Color(0xffff3a5a),),
-                          Icon(Icons.star, color: Color(0xffff3a5a),),
-                          Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                          item_star >= 0
+                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                          item_star >= 1
+                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                          item_star >= 2
+                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                          item_star >= 3
+                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                          item_star >= 4
+                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
                           SizedBox(width: 5.0,),
                           Text(
                             "(" + item.review.toString() + " reviews)",

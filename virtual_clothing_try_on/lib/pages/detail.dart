@@ -10,6 +10,8 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int item_star = (info.star - 1) % 5;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -101,11 +103,21 @@ class DetailPage extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.star, color: Color(0xffff3a5a)),
-                                    Icon(Icons.star, color: Color(0xffff3a5a)),
-                                    Icon(Icons.star, color: Color(0xffff3a5a)),
-                                    Icon(Icons.star, color: Color(0xffff3a5a)),
-                                    Icon(Icons.star_border, color: Color(0xffff3a5a)),
+                                    item_star >= 0
+                                        ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                                        : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                                    item_star >= 1
+                                        ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                                        : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                                    item_star >= 2
+                                        ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                                        : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                                    item_star >= 3
+                                        ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                                        : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                                    item_star >= 4
+                                        ? Icon(Icons.star, color: Color(0xffff3a5a),)
+                                        : Icon(Icons.star_border, color: Color(0xffff3a5a),),
                                   ],
                                 ),
                                 Text.rich(
@@ -175,7 +187,7 @@ class DetailPage extends StatelessWidget {
                           padding: const EdgeInsets.all(0),
                           itemCount: info.image.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return DetailImage(user_image: user.image, item_image: info.image[index], item_tag: info.tag[index], item_description: info.description[index]);
+                            return DetailImage(gender: user.gender, user_image: user.image, item_image: info.image[index], item_tag: info.tag[index], item_description: info.description[index]);
                           },
                         ),
                       ),

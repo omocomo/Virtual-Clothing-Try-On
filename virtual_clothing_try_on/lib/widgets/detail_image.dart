@@ -4,11 +4,11 @@ import 'package:virtual_clothing_try_on/model/user.dart';
 import 'package:virtual_clothing_try_on/pages/tryon.dart';
 
 class DetailImage extends StatelessWidget {
-  final String user_image;
+  final String user_image, gender;
   final String item_image, item_description;
   final int item_tag;
 
-  DetailImage({required this.user_image, required this.item_image, required this.item_description, required this.item_tag});
+  DetailImage({required this.gender, required this.user_image, required this.item_image, required this.item_description, required this.item_tag});
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +22,12 @@ class DetailImage extends StatelessWidget {
           'http://localhost:8000/${item_image}',
           fit: BoxFit.cover,
         ),
-        SizedBox(
-          height: 10,
-        ),
-        SizedBox(
+        (item_tag != 2)
+        ? SizedBox(
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-              primary: Color(0xffff3a5a),
+              primary: Color(0xff333333),
               padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
             ),
             child: Text(
@@ -41,10 +38,11 @@ class DetailImage extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => TryOnPage(item_tag: item_tag, item_image: item_image, user_image: user_image)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => TryOnPage(gender: gender, item_tag: item_tag, item_image: item_image, user_image: user_image)));
             },
           ),
-        ),
+        )
+        : SizedBox(),
         SizedBox(
           height: 10,
         ),

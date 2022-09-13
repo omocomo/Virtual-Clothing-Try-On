@@ -5,8 +5,8 @@ import 'package:virtual_clothing_try_on/model/user.dart';
 
 class TryOnPage extends StatefulWidget {
   final int item_tag;
-  final String item_image, user_image;
-  TryOnPage({required this.item_tag, required this.item_image, required this.user_image});
+  final String gender, item_image, user_image;
+  TryOnPage({required this.gender, required this.item_tag, required this.item_image, required this.user_image});
 
   @override
   State<TryOnPage> createState() => _TryOnPageState();
@@ -15,8 +15,11 @@ class TryOnPage extends StatefulWidget {
 class _TryOnPageState extends State<TryOnPage> {
   @override
   void initState() {
-    super.initState();
-    FaceSwapping();
+    // super.initState();
+    if (widget.item_tag == 2)
+      PrintOriginal();
+    else
+      FaceSwapping();
   }
 
   bool _output_visibility = false;
@@ -56,70 +59,176 @@ class _TryOnPageState extends State<TryOnPage> {
         ),
       ),
       body: (widget.item_tag == 0)
-      ? Column(
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 20),
-              Expanded(
-                child: IconButton(
-                  iconSize: 50,
-                  icon: Icon(Icons.not_interested),
-                  onPressed: () {
-                    ChangeHair(0);
-                  },
+      ? SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: Text(
+                "다양한 머리카락을 적용할 수 있는 이미지입니다.",
+                style: TextStyle(
+                  color: Colors.grey,
                 ),
               ),
-              Expanded(
-                child: IconButton(
-                  iconSize: 50,
-                  icon: Image.asset('assets/icon_hair2.png'),
-                  onPressed: () {
-                    ChangeHair(1);
-                  },
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 20),
+                Expanded(
+                  child: IconButton(
+                    iconSize: 40,
+                    icon: Icon(Icons.not_interested),
+                    onPressed: () {
+                      ChangeHair(0);
+                    },
+                  ),
                 ),
-              ),
-              Expanded(
-                child: IconButton(
-                  iconSize: 50,
-                  icon: Image.asset('assets/icon_hair2.png'),
-                  onPressed: () {
-                    ChangeHair(2);
-                  },
+                widget.gender == '여자'
+                ? Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair1.png'),
+                    onPressed: () {
+                      ChangeHair(1);
+                    },
+                  ),
+                )
+                : Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair11.png'),
+                    onPressed: () {
+                      ChangeHair(11);
+                    },
+                  ),
                 ),
-              ),
-              Expanded(
-                child: IconButton(
-                  iconSize: 50,
-                  icon: Image.asset('assets/icon_hair2.png'),
-                  onPressed: () {
-                    ChangeHair(3);
-                  },
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair2.png'),
+                    onPressed: () {
+                      ChangeHair(2);
+                    },
+                  ),
                 ),
-              ),
-              Expanded(
-                child: IconButton(
-                  iconSize: 50,
-                  icon: Image.asset('assets/icon_hair2.png'),
-                  onPressed: () {
-                    ChangeHair(4);
-                  },
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair3.png'),
+                    onPressed: () {
+                      ChangeHair(3);
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(width: 20),
-            ],
-          ),
-          _buildItemCard(context),
-        ],
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair4.png'),
+                    onPressed: () {
+                      ChangeHair(4);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair5.png'),
+                    onPressed: () {
+                      ChangeHair(5);
+                    },
+                  ),
+                ),
+                SizedBox(width: 20),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 20),
+                Expanded(
+                  child: IconButton(
+                    iconSize: 40,
+                    icon: Icon(Icons.account_circle),
+                    onPressed: () {
+                      ChangeHair(-1);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair6.png'),
+                    onPressed: () {
+                      ChangeHair(6);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair7.png'),
+                    onPressed: () {
+                      ChangeHair(7);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair8.png'),
+                    onPressed: () {
+                      ChangeHair(8);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair9.png'),
+                    onPressed: () {
+                      ChangeHair(9);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    iconSize: 50,
+                    icon: Image.asset('assets/icon_hair10.png'),
+                    onPressed: () {
+                      ChangeHair(10);
+                    },
+                  ),
+                ),
+                SizedBox(width: 20),
+              ],
+            ),
+            _buildItemCard(context),
+          ],
+        ),
       )
-      : Column(
-        children: [
-          _buildItemCard(context),
-        ],
+      : SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: Text(
+                "머리카락을 적용할 수 없는 이미지입니다.",
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            _buildItemCard(context),
+          ],
+        ),
       ),
     );
   }
@@ -147,8 +256,8 @@ class _TryOnPageState extends State<TryOnPage> {
     var formData = {
       'model_image': widget.item_image,
       'user_image': widget.user_image,
+      'gender': widget.gender,
     };
-
 
     final response = await dio.post(
       'http://$server:8000/face_swapping',
@@ -158,6 +267,27 @@ class _TryOnPageState extends State<TryOnPage> {
     if (response.statusCode == 200) {
       outputName = response.data['outputName'];
       print(response.data['outputName']);
+      _changed(true, "output");
+    }
+  }
+
+  Future PrintOriginal() async {
+    _changed(false, "output");
+
+    var dio = Dio();
+    var formData = {
+      'model_image': widget.item_image,
+      'gender': widget.gender,
+    };
+
+    final response = await dio.post(
+      'http://$server:8000/print_original',
+      data: formData,
+    );
+
+    if (response.statusCode == 200) {
+      outputName = response.data['outputName'];
+      print("찍혔나?" + response.data['outputName']);
       _changed(true, "output");
     }
   }
@@ -174,7 +304,6 @@ class _TryOnPageState extends State<TryOnPage> {
       'user_image': widget.user_image,
       'hair_code': hair_code,
     };
-
 
     final response = await dio.post(
       'http://$server:8000/change_hair',
