@@ -25,9 +25,10 @@ class HomePage extends StatelessWidget {
                 Icons.logout,
                 color: Colors.white,
               ),
-              onPressed: (){
+              onPressed: () {
                 Navigator.pop(context);
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => LoginPage()));
               },
             ),
             actions: <Widget>[
@@ -36,15 +37,18 @@ class HomePage extends StatelessWidget {
                   Icons.account_circle,
                   color: Colors.white,
                 ),
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePage(user: user)));
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProfilePage(user: user)));
                 },
               ),
             ],
             floating: true,
             flexibleSpace: ListView(
               children: <Widget>[
-                SizedBox(height: 70.0,),
+                SizedBox(
+                  height: 70.0,
+                ),
                 Text(
                   "Soodo Shop",
                   textAlign: TextAlign.center,
@@ -66,7 +70,7 @@ class HomePage extends StatelessWidget {
                       hintText: "편안하고 멋스러운 포멀룩",
                       border: InputBorder.none,
                       icon: IconButton(
-                        onPressed: (){},
+                        onPressed: () {},
                         icon: Icon(Icons.search),
                       ),
                     ),
@@ -81,39 +85,41 @@ class HomePage extends StatelessWidget {
             ),
           ),
           StreamBuilder<List<Item>>(
-            stream: user.gender == '남자' ? readItems('man_items') : readItems('woman_items'),
-            builder: (context, snapshot) {
-
-              if (snapshot.hasError) {
-                return SliverToBoxAdapter(child: Text('Something went wrong!'),);
-              } else if (snapshot.hasData) {
-                final items = snapshot.data!;
-                return SliverList(
-                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                      return _buildItems(context, items[index]);},
-                    childCount: items.length
-                  )
-                );
-            } else {
-              return SliverToBoxAdapter(child: Text('No Data'),);
-            }
-          }),
+              stream: user.gender == '남자'
+                  ? readItems('man_items')
+                  : readItems('woman_items'),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return SliverToBoxAdapter(
+                    child: Text('Something went wrong!'),
+                  );
+                } else if (snapshot.hasData) {
+                  final items = snapshot.data!;
+                  return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                    return _buildItems(context, items[index]);
+                  }, childCount: items.length));
+                } else {
+                  return SliverToBoxAdapter(
+                    child: Text('No Data'),
+                  );
+                }
+              }),
         ],
       ),
     );
   }
 
-  Stream<List<Item>> readItems(String gender_items) => FirebaseFirestore.instance
-      .collection(gender_items)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Item.fromJson(doc.data())).toList());
+  Stream<List<Item>> readItems(String gender_items) =>
+      FirebaseFirestore.instance.collection(gender_items).snapshots().map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Item.fromJson(doc.data())).toList());
 
   Widget _buildItems(BuildContext context, Item item) {
     int item_star = (item.star - 1) % 5;
     print(item.star);
     print("별점: " + (item.star % 5).toString());
-
 
     return Container(
       margin: EdgeInsets.all(20.0),
@@ -129,7 +135,8 @@ class HomePage extends StatelessWidget {
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    Image.network('http://localhost:8000/${item.image[0]}?v=${DateTime.now().millisecondsSinceEpoch}'),
+                    Image.network(
+                        'http://localhost:8000/${item.image[0]}?v=${DateTime.now().millisecondsSinceEpoch}'),
                     Positioned(
                       right: 10,
                       top: 10,
@@ -139,8 +146,10 @@ class HomePage extends StatelessWidget {
                           color: Colors.black,
                           size: 24.0,
                         ),
-                        onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(info: item, user: user)));
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailPage(info: item, user: user)));
                         },
                       ),
                     ),
@@ -181,21 +190,53 @@ class HomePage extends StatelessWidget {
                         children: <Widget>[
                           // item['review'] 숫자에 따라 별점 다르게 표시해야 함
                           item_star >= 0
-                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
-                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                              ? Icon(
+                                  Icons.star,
+                                  color: Color(0xffff3a5a),
+                                )
+                              : Icon(
+                                  Icons.star_border,
+                                  color: Color(0xffff3a5a),
+                                ),
                           item_star >= 1
-                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
-                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                              ? Icon(
+                                  Icons.star,
+                                  color: Color(0xffff3a5a),
+                                )
+                              : Icon(
+                                  Icons.star_border,
+                                  color: Color(0xffff3a5a),
+                                ),
                           item_star >= 2
-                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
-                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                              ? Icon(
+                                  Icons.star,
+                                  color: Color(0xffff3a5a),
+                                )
+                              : Icon(
+                                  Icons.star_border,
+                                  color: Color(0xffff3a5a),
+                                ),
                           item_star >= 3
-                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
-                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
+                              ? Icon(
+                                  Icons.star,
+                                  color: Color(0xffff3a5a),
+                                )
+                              : Icon(
+                                  Icons.star_border,
+                                  color: Color(0xffff3a5a),
+                                ),
                           item_star >= 4
-                              ? Icon(Icons.star, color: Color(0xffff3a5a),)
-                              : Icon(Icons.star_border, color: Color(0xffff3a5a),),
-                          SizedBox(width: 5.0,),
+                              ? Icon(
+                                  Icons.star,
+                                  color: Color(0xffff3a5a),
+                                )
+                              : Icon(
+                                  Icons.star_border,
+                                  color: Color(0xffff3a5a),
+                                ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
                           Text(
                             "(" + item.review.toString() + " reviews)",
                             style: TextStyle(

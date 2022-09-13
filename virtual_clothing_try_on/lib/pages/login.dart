@@ -16,11 +16,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Color(0xffff3a5a),
-      )
-    );
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Color(0xffff3a5a),
+    ));
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
@@ -35,8 +33,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 300,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0x22ff3a5a), Color(0x22fe494d)]
-                    ),
+                        colors: [Color(0x22ff3a5a), Color(0x22fe494d)]),
                   ),
                 ),
               ),
@@ -48,8 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 300,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0x44ff3a5a), Color(0x44fe494d)]
-                    ),
+                        colors: [Color(0x44ff3a5a), Color(0x44fe494d)]),
                   ),
                 ),
               ),
@@ -59,21 +55,18 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: <Widget>[
                       SizedBox(
-                        height: 40,
+                        height: 50,
                       ),
-                      Icon(
-                        Icons.man,
-                        color: Colors.white,
-                        size: 60,
-                      ),
-                      SizedBox(
-                        height: 20,
+                      Image.asset(
+                        'assets/full_icon.png',
+                        width: 90,
+                        height: 90,
                       ),
                       Text(
-                        "Soodo Shop",
+                        "Sudo Shop",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 30,
+                          fontSize: 20,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -83,8 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 300,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xffff3a5a), Color(0xfffe494d)]
-                    ),
+                        colors: [Color(0xffff3a5a), Color(0xfffe494d)]),
                   ),
                 ),
               ),
@@ -102,21 +94,21 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.all(Radius.circular(30)),
               child: TextField(
                 controller: controllerEmail,
-                onChanged: (String value){},
+                onChanged: (String value) {},
                 cursorColor: Colors.deepOrange,
                 decoration: InputDecoration(
-                  hintText: "이메일",
-                  prefixIcon: Material(
-                    elevation: 0,
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    child: Icon(
-                      Icons.email,
-                      color: Colors.red,
+                    hintText: "이메일",
+                    prefixIcon: Material(
+                      elevation: 0,
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      child: Icon(
+                        Icons.email,
+                        color: Colors.red,
+                      ),
                     ),
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
-                ),
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
               ),
             ),
           ),
@@ -130,22 +122,22 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.all(Radius.circular(30)),
               child: TextField(
                 controller: controllerPasswd,
-                onChanged: (String value){},
+                onChanged: (String value) {},
                 obscureText: true,
                 cursorColor: Colors.deepOrange,
                 decoration: InputDecoration(
-                  hintText: "비밀번호",
-                  prefixIcon: Material(
-                    elevation: 0,
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    child: Icon(
-                      Icons.lock,
-                      color: Colors.red,
+                    hintText: "비밀번호",
+                    prefixIcon: Material(
+                      elevation: 0,
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      child: Icon(
+                        Icons.lock,
+                        color: Colors.red,
+                      ),
                     ),
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)
-                ),
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
               ),
             ),
           ),
@@ -156,9 +148,8 @@ class _LoginPageState extends State<LoginPage> {
             padding: EdgeInsets.symmetric(horizontal: 32),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(100)),
-                color: Color(0xffff3a5a)
-              ),
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                  color: Color(0xffff3a5a)),
               child: TextButton(
                 child: Text(
                   "로그인",
@@ -169,19 +160,25 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 onPressed: () {
-                  availableCheck(controllerEmail.text, controllerPasswd.text).then((value) async {
+                  availableCheck(controllerEmail.text, controllerPasswd.text)
+                      .then((value) async {
                     if (value != 'false') {
-                      var UserDB = await FirebaseFirestore.instance.collection('users').doc(value).get();
+                      var UserDB = await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(value)
+                          .get();
                       var json = UserDB.data();
                       User nowUser = User.fromJson(json!);
                       Navigator.pop(context);
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(user: nowUser)));
-                    }
-                    else {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => HomePage(user: nowUser)));
+                    } else {
                       // set up the button
                       Widget okButton = TextButton(
                         child: Text("OK"),
-                        onPressed: () {Navigator.of(context).pop();},
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                       );
 
                       AlertDialog alert = AlertDialog(
@@ -212,9 +209,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               "비밀번호를 잊어버리셨나요?",
               style: TextStyle(
-              color: Colors.red,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
+                color: Colors.red,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -225,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "계정이 없으신가요?",
+                "계정이 없으신가요? ",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 12,
@@ -234,7 +231,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUpPage()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SignUpPage()));
                 },
                 child: Text(
                   "회원가입",
@@ -256,10 +254,10 @@ class _LoginPageState extends State<LoginPage> {
 
 Future<String> availableCheck(String email, String passwd) async {
   final QuerySnapshot result = await FirebaseFirestore.instance
-    .collection('users')
-    .where('email', isEqualTo: email)
-    .limit(1)
-    .get();
+      .collection('users')
+      .where('email', isEqualTo: email)
+      .limit(1)
+      .get();
   final List<DocumentSnapshot> documents = result.docs;
   if (documents.length == 1) {
     if (passwd == documents.first.get('password')) {
