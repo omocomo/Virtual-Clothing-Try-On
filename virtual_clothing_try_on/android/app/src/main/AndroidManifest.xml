@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.virtual_clothing_try_on">
    <application
-        android:label="Soodo Shop"
+        android:label="Sudo Shop"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -10,6 +10,8 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int item_star = (info.star - 1) % 5;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -35,10 +37,9 @@ class DetailPage extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            foregroundDecoration: BoxDecoration(
-              color: Colors.black26
-            ),
+            foregroundDecoration: BoxDecoration(color: Colors.black26),
             child: Image.network(
+              // 'http://localhost:8000/${info.image[0]}?v=${DateTime.now().millisecondsSinceEpoch}',
               'http://localhost:8000/${info.image[0]}',
               fit: BoxFit.cover,
             ),
@@ -56,10 +57,9 @@ class DetailPage extends StatelessWidget {
                   child: Text(
                     info.title,
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28.0,
-                      fontWeight: FontWeight.bold
-                    ),
+                        color: Colors.white,
+                        fontSize: 28.0,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 Row(
@@ -68,13 +68,17 @@ class DetailPage extends StatelessWidget {
                       width: 16.0,
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16.0),
                       decoration: BoxDecoration(
                         color: Colors.black12,
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Text(
-                        info.star.toString() + "점/" + info.review.toString() + "리뷰",
+                        info.star.toString() +
+                            "점/" +
+                            info.review.toString() +
+                            "리뷰",
                         style: TextStyle(color: Colors.white, fontSize: 13.0),
                       ),
                     ),
@@ -101,11 +105,51 @@ class DetailPage extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.star, color: Color(0xffff3a5a)),
-                                    Icon(Icons.star, color: Color(0xffff3a5a)),
-                                    Icon(Icons.star, color: Color(0xffff3a5a)),
-                                    Icon(Icons.star, color: Color(0xffff3a5a)),
-                                    Icon(Icons.star_border, color: Color(0xffff3a5a)),
+                                    item_star >= 0
+                                        ? Icon(
+                                            Icons.star,
+                                            color: Color(0xffff3a5a),
+                                          )
+                                        : Icon(
+                                            Icons.star_border,
+                                            color: Color(0xffff3a5a),
+                                          ),
+                                    item_star >= 1
+                                        ? Icon(
+                                            Icons.star,
+                                            color: Color(0xffff3a5a),
+                                          )
+                                        : Icon(
+                                            Icons.star_border,
+                                            color: Color(0xffff3a5a),
+                                          ),
+                                    item_star >= 2
+                                        ? Icon(
+                                            Icons.star,
+                                            color: Color(0xffff3a5a),
+                                          )
+                                        : Icon(
+                                            Icons.star_border,
+                                            color: Color(0xffff3a5a),
+                                          ),
+                                    item_star >= 3
+                                        ? Icon(
+                                            Icons.star,
+                                            color: Color(0xffff3a5a),
+                                          )
+                                        : Icon(
+                                            Icons.star_border,
+                                            color: Color(0xffff3a5a),
+                                          ),
+                                    item_star >= 4
+                                        ? Icon(
+                                            Icons.star,
+                                            color: Color(0xffff3a5a),
+                                          )
+                                        : Icon(
+                                            Icons.star_border,
+                                            color: Color(0xffff3a5a),
+                                          ),
                                   ],
                                 ),
                                 Text.rich(
@@ -118,9 +162,7 @@ class DetailPage extends StatelessWidget {
                                           color: Colors.grey,
                                         ),
                                       ),
-                                      TextSpan(
-                                        text: info.addition
-                                      ),
+                                      TextSpan(text: info.addition),
                                     ],
                                   ),
                                   style: TextStyle(
@@ -175,7 +217,12 @@ class DetailPage extends StatelessWidget {
                           padding: const EdgeInsets.all(0),
                           itemCount: info.image.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return DetailImage(user_image: user.image, item_image: info.image[index], item_tag: info.tag[index], item_description: info.description[index]);
+                            return DetailImage(
+                                gender: user.gender,
+                                user_image: user.image,
+                                item_image: info.image[index],
+                                item_tag: info.tag[index],
+                                item_description: info.description[index]);
                           },
                         ),
                       ),

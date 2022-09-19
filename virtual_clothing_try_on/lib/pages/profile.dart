@@ -81,55 +81,56 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Stack(
                   children: [
                     (pickedFile == null)
-                    ? Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 4,
-                          color: Theme.of(context).scaffoldBackgroundColor
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity(0.1),
-                            offset: Offset(0, 10),
+                        ? Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 4,
+                                  color: Theme.of(context)
+                                      .scaffoldBackgroundColor),
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: Offset(0, 10),
+                                ),
+                              ],
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                    'http://localhost:8000/${widget.user.image}'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 4,
+                                  color: Theme.of(context)
+                                      .scaffoldBackgroundColor),
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: Offset(0, 10),
+                                ),
+                              ],
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: FileImage(File(pickedFile!.path)),
+                                // image: (pickedFile != null)
+                                //     ? FileImage(File(pickedFile!.path))
+                                //     : AssetImage("assets/user_default.png"),
+                              ),
+                            ),
                           ),
-                        ],
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage('http://localhost:8000/${widget.user.image}'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                    : Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 4,
-                            color: Theme.of(context).scaffoldBackgroundColor
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity(0.1),
-                            offset: Offset(0, 10),
-                          ),
-                        ],
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: FileImage(File(pickedFile!.path)),
-                          // image: (pickedFile != null)
-                          //     ? FileImage(File(pickedFile!.path))
-                          //     : AssetImage("assets/user_default.png"),
-                        ),
-                      ),
-                    ),
                     Positioned(
                       bottom: 0,
                       right: 0,
@@ -146,56 +147,58 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         child: IconButton(
                           icon: const Icon(
-                            Icons.edit, 
+                            Icons.edit,
                             size: 17,
                             color: Colors.white,
-                          ), 
-                          onPressed: () { 
+                          ),
+                          onPressed: () {
                             AlertDialog alert = AlertDialog(
-                              title: const Text('옵션을 선택해주세요'),
+                              title: const Text('프로필 사진 변경'),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
+                                  Text('사진은 정면으로 머리카락이 잘 정돈\n된 상태가 좋습니다.'),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
                                   InkWell(
                                     onTap: () {
                                       _getFromCamera();
                                     },
-                                    child: Row(
-                                      children: const [
-                                        Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Icon(
-                                            Icons.camera,
-                                            // color: Colors.purple
-                                          ),
+                                    child: Row(children: const [
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(
+                                          Icons.camera,
+                                          // color: Colors.purple
                                         ),
-                                        Text(
-                                          'Camera',
-                                           // style: TextStyle(color:Colors.purple),
-                                        )
-                                      ]
-                                    ),
+                                      ),
+                                      Text(
+                                        'Camera',
+                                        // style: TextStyle(color:Colors.purple),
+                                      )
+                                    ]),
                                   ),
-                                  SizedBox(height: 20,),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
                                   InkWell(
                                     onTap: () {
                                       _getFromGallery();
                                     },
-                                    child: Row(
-                                      children: const [
-                                        Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: Icon(
-                                            Icons.image,
-                                            // color: Colors.purple
-                                          ),
+                                    child: Row(children: const [
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(
+                                          Icons.image,
+                                          // color: Colors.purple
                                         ),
-                                        Text(
-                                          'Gallery',
-                                           // style: TextStyle(color:Colors.purple),
-                                        )
-                                      ]
-                                    ),
+                                      ),
+                                      Text(
+                                        'Gallery',
+                                        // style: TextStyle(color:Colors.purple),
+                                      )
+                                    ]),
                                   ),
                                 ],
                               ),
@@ -231,7 +234,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.black12,
                       padding: EdgeInsets.symmetric(horizontal: 60),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                     ),
                     child: Text(
                       "취소",
@@ -250,7 +254,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       backgroundColor: Color(0xffff3a5a),
                       elevation: 2,
                       padding: EdgeInsets.symmetric(horizontal: 60),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                     ),
                     child: const Text(
                       "저장",
@@ -269,7 +274,30 @@ class _ProfilePageState extends State<ProfilePage> {
                       if (pickedFile != null)
                         await uploadUserImage(pickedFile!, widget.user.image);
                       updateUser(widget.user);
-                      Navigator.pop(context);
+                      // set up the button
+                      Widget okButton = TextButton(
+                        child: Text("OK"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.pop(context);
+                        },
+                      );
+
+                      AlertDialog alert = AlertDialog(
+                        title: Text("프로필 수정 성공"),
+                        content: Text("개인 프로필 정보가 정상적으로 수정 되었습니다."),
+                        actions: [
+                          okButton,
+                        ],
+                      );
+
+                      // show the dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return alert;
+                        },
+                      );
                     },
                   ),
                 ],
@@ -282,7 +310,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future updateUser(User user) async {
-    final QuerySnapshot result = await FirebaseFirestore.instance.collection('users').where("id", isEqualTo: user.id).limit(1).get();
+    final QuerySnapshot result = await FirebaseFirestore.instance
+        .collection('users')
+        .where("id", isEqualTo: user.id)
+        .limit(1)
+        .get();
     final id = result.docs.first.get('id');
     final docUser = FirebaseFirestore.instance.collection('users').doc(id);
     final json = user.toJson();
@@ -309,28 +341,34 @@ class _ProfilePageState extends State<ProfilePage> {
     Navigator.pop(context);
   }
 
-  late TextEditingController _controller1 = TextEditingController(text: widget.user.username);
-  late TextEditingController _controller2 = TextEditingController(text: widget.user.email);
-  late TextEditingController _controller3 = TextEditingController(text: widget.user.password);
-  late TextEditingController _controller4 = TextEditingController(text: widget.user.address);
-  Widget buildTextField(TextEditingController _controller, String labelText, bool isPasswordTextField) {
+  late TextEditingController _controller1 =
+      TextEditingController(text: widget.user.username);
+  late TextEditingController _controller2 =
+      TextEditingController(text: widget.user.email);
+  late TextEditingController _controller3 =
+      TextEditingController(text: widget.user.password);
+  late TextEditingController _controller4 =
+      TextEditingController(text: widget.user.address);
+  Widget buildTextField(TextEditingController _controller, String labelText,
+      bool isPasswordTextField) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
         controller: _controller,
         obscureText: isPasswordTextField ? !showPassword : false,
         decoration: InputDecoration(
-          suffixIcon: isPasswordTextField ? IconButton(
-            onPressed: () {
-              setState(() {
-                showPassword = !showPassword;
-              });
-            },
-            icon: Icon(
-              Icons.remove_red_eye,
-              color: Colors.grey,
-            ),
-          )
+          suffixIcon: isPasswordTextField
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.grey,
+                  ),
+                )
               : null,
           contentPadding: EdgeInsets.only(bottom: 3),
           labelText: labelText,

@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // 디버그 배너 제거
       debugShowCheckedModeBanner: false,
-      title: 'Soodo Shop',
+      title: 'Sudo Shop',
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),

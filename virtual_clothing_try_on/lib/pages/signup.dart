@@ -22,7 +22,6 @@ class SignUpPage extends StatefulWidget {
 //     required this.address,
 //   });
 
-
 class _SignUpPageState extends State<SignUpPage> {
   XFile? pickedFile;
   String _gender = '남자';
@@ -72,55 +71,55 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Stack(
                   children: [
                     (pickedFile == null)
-                    ? Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 4,
-                            color: Theme.of(context).scaffoldBackgroundColor
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity(0.1),
-                            offset: Offset(0, 10),
+                        ? Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 4,
+                                  color: Theme.of(context)
+                                      .scaffoldBackgroundColor),
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: Offset(0, 10),
+                                ),
+                              ],
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage("assets/user_default.png"),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 4,
+                                  color: Theme.of(context)
+                                      .scaffoldBackgroundColor),
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.1),
+                                  offset: Offset(0, 10),
+                                ),
+                              ],
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: FileImage(File(pickedFile!.path)),
+                                // image: (pickedFile != null)
+                                //     ? FileImage(File(pickedFile!.path))
+                                //     : AssetImage("assets/user_default.png"),
+                              ),
+                            ),
                           ),
-                        ],
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage("assets/user_default.png"),
-                        ),
-                      ),
-                    )
-                    : Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 4,
-                            color: Theme.of(context).scaffoldBackgroundColor
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity(0.1),
-                            offset: Offset(0, 10),
-                          ),
-                        ],
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: FileImage(File(pickedFile!.path)),
-                          // image: (pickedFile != null)
-                          //     ? FileImage(File(pickedFile!.path))
-                          //     : AssetImage("assets/user_default.png"),
-                        ),
-                      ),
-                    ),
                     Positioned(
                       bottom: 0,
                       right: 0,
@@ -143,50 +142,52 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           onPressed: () {
                             AlertDialog alert = AlertDialog(
-                              title: const Text('옵션을 선택해주세요'),
+                              title: const Text('프로필 사진 선택'),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
+                                  Text('사진은 정면으로 머리카락이 잘 정돈\n된 상태가 좋습니다.'),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
                                   InkWell(
                                     onTap: () {
                                       _getFromCamera();
                                     },
-                                    child: Row(
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.all(4.0),
-                                            child: Icon(
-                                              Icons.camera,
-                                              // color: Colors.purple
-                                            ),
-                                          ),
-                                          Text(
-                                            'Camera',
-                                            // style: TextStyle(color:Colors.purple),
-                                          )
-                                        ]
-                                    ),
+                                    child: Row(children: const [
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(
+                                          Icons.camera,
+                                          // color: Colors.purple
+                                        ),
+                                      ),
+                                      Text(
+                                        'Camera',
+                                        // style: TextStyle(color:Colors.purple),
+                                      )
+                                    ]),
                                   ),
-                                  SizedBox(height: 20,),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
                                   InkWell(
                                     onTap: () {
                                       _getFromGallery();
                                     },
-                                    child: Row(
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.all(4.0),
-                                            child: Icon(
-                                              Icons.image,
-                                              // color: Colors.purple
-                                            ),
-                                          ),
-                                          Text(
-                                            'Gallery',
-                                            // style: TextStyle(color:Colors.purple),
-                                          )
-                                        ]
-                                    ),
+                                    child: Row(children: const [
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(
+                                          Icons.image,
+                                          // color: Colors.purple
+                                        ),
+                                      ),
+                                      Text(
+                                        'Gallery',
+                                        // style: TextStyle(color:Colors.purple),
+                                      )
+                                    ]),
                                   ),
                                 ],
                               ),
@@ -210,7 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget> [
+                children: <Widget>[
                   SizedBox(
                     width: 20,
                   ),
@@ -268,7 +269,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.black12,
                       padding: EdgeInsets.symmetric(horizontal: 60),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                     ),
                     child: Text(
                       "취소",
@@ -287,7 +289,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       backgroundColor: Color(0xffff3a5a),
                       elevation: 2,
                       padding: EdgeInsets.symmetric(horizontal: 60),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                     ),
                     child: const Text(
                       "가입",
@@ -302,7 +305,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         // 이미지 null일 경우
                         Widget okButton = TextButton(
                           child: Text("확인"),
-                          onPressed: () {Navigator.of(context).pop();},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         );
 
                         AlertDialog alert = AlertDialog(
@@ -320,12 +325,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             return alert;
                           },
                         );
-                      }
-                      else if (_controller1.text == "") {
+                      } else if (_controller1.text == "") {
                         // 유저네임
                         Widget okButton = TextButton(
                           child: Text("확인"),
-                          onPressed: () {Navigator.of(context).pop();},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         );
 
                         AlertDialog alert = AlertDialog(
@@ -343,12 +349,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             return alert;
                           },
                         );
-                      }
-                      else if (_controller2.text == "") {
+                      } else if (_controller2.text == "") {
                         // 이메일
                         Widget okButton = TextButton(
                           child: Text("확인"),
-                          onPressed: () {Navigator.of(context).pop();},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         );
 
                         AlertDialog alert = AlertDialog(
@@ -366,12 +373,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             return alert;
                           },
                         );
-                      }
-                      else if (_controller3.text == "") {
+                      } else if (_controller3.text == "") {
                         // 패스워드
                         Widget okButton = TextButton(
                           child: Text("확인"),
-                          onPressed: () {Navigator.of(context).pop();},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         );
 
                         AlertDialog alert = AlertDialog(
@@ -389,12 +397,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             return alert;
                           },
                         );
-                      }
-                      else if (_controller4.text == "") {
+                      } else if (_controller4.text == "") {
                         // 주소
                         Widget okButton = TextButton(
                           child: Text("확인"),
-                          onPressed: () {Navigator.of(context).pop();},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         );
 
                         AlertDialog alert = AlertDialog(
@@ -412,9 +421,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             return alert;
                           },
                         );
-                      }
-                      else {
-                        User user = User(image: "",
+                      } else {
+                        User user = User(
+                            image: "",
                             gender: _gender,
                             username: _controller1.text,
                             email: _controller2.text,
@@ -422,7 +431,30 @@ class _SignUpPageState extends State<SignUpPage> {
                             address: _controller4.text);
                         createUser(user);
                         await uploadUserImage(pickedFile!, user.image);
-                        Navigator.pop(context);
+                        // set up the button
+                        Widget okButton = TextButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.pop(context);
+                          },
+                        );
+
+                        AlertDialog alert = AlertDialog(
+                          title: Text("회원가입 성공"),
+                          content: Text("이제부터 sudo shop을 이용하실 수 있습니다."),
+                          actions: [
+                            okButton,
+                          ],
+                        );
+
+                        // show the dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return alert;
+                          },
+                        );
                       }
                     },
                   ),
@@ -468,24 +500,26 @@ class _SignUpPageState extends State<SignUpPage> {
   late TextEditingController _controller2 = TextEditingController();
   late TextEditingController _controller3 = TextEditingController();
   late TextEditingController _controller4 = TextEditingController();
-  Widget buildTextField(TextEditingController _controller, String labelText, bool isPasswordTextField) {
+  Widget buildTextField(TextEditingController _controller, String labelText,
+      bool isPasswordTextField) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
         controller: _controller,
         obscureText: isPasswordTextField ? !showPassword : false,
         decoration: InputDecoration(
-          suffixIcon: isPasswordTextField ? IconButton(
-            onPressed: () {
-              setState(() {
-                showPassword = !showPassword;
-              });
-            },
-            icon: Icon(
-              Icons.remove_red_eye,
-              color: Colors.grey,
-            ),
-          )
+          suffixIcon: isPasswordTextField
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.grey,
+                  ),
+                )
               : null,
           contentPadding: EdgeInsets.only(bottom: 3),
           labelText: labelText,
