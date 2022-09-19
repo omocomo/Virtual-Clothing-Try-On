@@ -68,7 +68,17 @@ def test_image(src_img_path, trg_img_path, output_path):
         image_swap(args.pic_b_path, latend_id, model, app, args.output_path, use_mask=args.use_mask)
 
 if __name__ == '__main__':
-    src_img_path = './image/Iron_man.jpg'
-    trg_img_path = './image/specific1.png'
-    output_path = './output/img2img_res.png'
-    test_image(src_img_path, trg_img_path, output_path)
+    for i in range(1, 43):
+        # for j in range(1, 12):
+        # if i == 4:
+        #     trg_img_path = f'C:/Users/omocomo/Desktop/model/{str(i).zfill(3)}.png'
+        # else:
+        trg_img_path = f'C:/Users/omocomo/Desktop/DATA/woman_model/{str(i).zfill(3)}.jpg'
+        src_img_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/user/3KbHk2KBiuqs32lSCrFP.jpg'
+        output_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/swap/woman_001_{str(i).zfill(3)}.jpg'
+        test_image(src_img_path, trg_img_path, output_path)
+
+    # src_img_path = 'C:/Users/omocomo/Desktop/assets/lee.jpg'
+    # trg_img_path = f'C:/Users/omocomo/Desktop/all_image_video/02.jpg'
+    # output_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/swap/lee_02.jpg'
+    # test_image(src_img_path, trg_img_path, output_path)

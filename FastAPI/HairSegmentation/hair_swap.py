@@ -159,9 +159,11 @@ def HairSwap(user_img_path, model_img_path, user_hair_mask_path):
 
 if __name__ == "__main__":
 
-    for i in range(1, 43):
-        user_img_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/user/sbsb.png'
-        model_img_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/swap/sb_{str(i).zfill(3)}.jpg'
-        user_hair_mask_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/hair/sbsb.png'
-        HairSwap(user_img_path, model_img_path, user_hair_mask_path)
+    # for i in range(1, 21):
+    for j in range(1, 12):
+        for k in range(1, 6):
+            user_img_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/hair/hair_man_{str(j).zfill(3)}.png'
+            model_img_path = f'C:/Users/omocomo/Desktop/remove_all/{str(k).zfill(3)}.jpg'
+            user_hair_mask_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/hair/hair_mask_{str(j).zfill(3)}.png'
+            HairSwap(user_img_path, model_img_path, user_hair_mask_path)
        

@@ -8,6 +8,7 @@ from HairSegmentation.hair_swap import HairSwap
 import os
 from glob import glob
 from typing import List
+from shutil import copyfile
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR,'DATA/')
@@ -17,6 +18,12 @@ server = 'localhost'
 HAIR_DIR = os.path.join(DATA_DIR,'hair/')
 SERVER_HAIR_DIR = os.path.join(f'http://{server}:8000/','DATA/','hair/')
 MODEL_DIR = os.path.join(DATA_DIR,'model/')
+MODEL_MAN_DIR = os.path.join(DATA_DIR,'model/man/origin/')
+MODEL_MAN_ALL_DIR = os.path.join(DATA_DIR,'model/man/remove_all/')
+MODEL_MAN_TOP_DIR = os.path.join(DATA_DIR,'model/man/remove_top/')
+MODEL_WOMAN_DIR = os.path.join(DATA_DIR,'model/woman/origin/')
+MODEL_WOMAN_ALL_DIR = os.path.join(DATA_DIR,'model/woman/remove_all/')
+MODEL_WOMAN_TOP_DIR = os.path.join(DATA_DIR,'model/woman/remove_top/')
 SERVER_MODEL_DIR = os.path.join(f'http://{server}:8000/','DATA/','model/')
 OUTPUT_DIR = os.path.join(DATA_DIR,'output/')
 SERVER_OUTPUT_DIR = os.path.join(f'http://{server}:8000/','DATA/','output/')
@@ -52,6 +59,14 @@ def get_image(file_name:str):
 def get_image(file_name:str):
     return FileResponse(''.join([MODEL_DIR, file_name]))
 
+@router.get('/DATA/model/man/origin/{file_name}')
+def get_image(file_name:str):
+    return FileResponse(''.join([MODEL_MAN_DIR, file_name]))
+
+@router.get('/DATA/model/woman/origin/{file_name}')
+def get_image(file_name:str):
+    return FileResponse(''.join([MODEL_WOMAN_DIR, file_name]))
+
 @router.get('/DATA/user/{file_name}')
 def get_image(file_name:str):
     return FileResponse(''.join([USER_DIR, file_name]))
@@ -64,25 +79,61 @@ class TryOnData(BaseModel):
 class FaceSwap(BaseModel):
     model_image: str
     user_image: str
+    gender: str
+
+class Original(BaseModel):
+    model_image: str
+    gender: str
+
+@router.post('/print_original')
+async def print_original(original: Original):
+    model_image_name = original.model_image.split('/')[-1]
+    if original.gender == '남자':
+        src_path = os.path.join(MODEL_MAN_DIR, model_image_name)
+    else:
+        src_path = os.path.join(MODEL_WOMAN_DIR, model_image_name)
+    dst_path = os.path.join(OUTPUT_DIR, f'temp_{model_image_name}')
+    copyfile(src_path, dst_path)
+
+    print(original.model_image)
+    result = {'outputName' : f'temp_{model_image_name}'}
+    return result
+
 
 @router.post('/face_swapping')
-async def get_tryon(face_swap: FaceSwap): 
+async def face_swapping(face_swap: FaceSwap): 
     print(face_swap.model_image)
     print(face_swap.user_image)
+    print(face_swap.gender)
 
     user_image_name = face_swap.user_image.split('/')[-1].split('.')[0]
     model_image_name = face_swap.model_image.split('/')[-1].split('.')[0]
-    output_image_name = user_image_name + '_' + model_image_name 
 
-    select_model_path = os.path.join(MODEL_DIR, model_image_name + '.jpg')
+    output_image_name_origin = user_image_name + '_' + model_image_name 
+    output_image_name_all = user_image_name + '_' + model_image_name + '_all'
+    output_image_name_top = user_image_name + '_' + model_image_name + '_top'
+    
+
+    if face_swap.gender == '남자':
+        select_model_path = os.path.join(MODEL_MAN_DIR, model_image_name + '.jpg')
+        select_model_all_path = os.path.join(MODEL_MAN_ALL_DIR, model_image_name + '.jpg')
+        select_model_top_path = os.path.join(MODEL_MAN_TOP_DIR, model_image_name + '.jpg')
+    else:
+        select_model_path = os.path.join(MODEL_WOMAN_DIR, model_image_name + '.jpg')
+        select_model_all_path = os.path.join(MODEL_WOMAN_ALL_DIR, model_image_name + '.jpg')
+        select_model_top_path = os.path.join(MODEL_WOMAN_TOP_DIR, model_image_name + '.jpg')
     select_user_path = os.path.join(USER_DIR, user_image_name + '.jpg')
-    output_path = os.path.join(OUTPUT_DIR, output_image_name + '.jpg')
+    output_path = os.path.join(OUTPUT_DIR, output_image_name_origin + '.jpg')
+    output_all_path = os.path.join(OUTPUT_DIR, output_image_name_all + '.jpg')
+    output_top_path = os.path.join(OUTPUT_DIR, output_image_name_top + '.jpg')
 
     # Face Swapping
-    test_image(select_user_path, select_model_path, output_path)
+    test_image(select_user_path, select_model_path, output_path) # origin
+    test_image(select_user_path, select_model_all_path, output_all_path) # remove_all
+    test_image(select_user_path, select_model_top_path, output_top_path) # remove_top
 
     # output_url = SERVER_OUTPUT_DIR + OUTPUT_VIDEO_NAME
-    result = {'outputName' : output_image_name + '.jpg'}
+    result = {'outputName' : output_image_name_origin + '.jpg'}
     return result
 
 
@@ -97,14 +148,24 @@ async def change_hair(try_on_data: TryOnData):
     output_image_name = user_image_name + '_' + model_image_name 
 
     output_path = os.path.join(OUTPUT_DIR, output_image_name + '.jpg')
+    output_all_path = os.path.join(OUTPUT_DIR, output_image_name + '_all.jpg')
+    output_top_path = os.path.join(OUTPUT_DIR, output_image_name + '_top.jpg')
 
-    if try_on_data.hair_code == 0:
+    if try_on_data.hair_code == -1:
+        # 사용자 머리 합성하기
+        hair_man_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/user/{user_image_name}.jpg'
+        hair_mask_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/hair/{user_image_name}.png'
+        final_image = HairSwap(hair_man_path, output_all_path, hair_mask_path) # 사용자 머리의 배경
+    elif try_on_data.hair_code == 0:
         final_image = output_image_name + '.jpg'
     else:
         # 머리 합성하기
         hair_man_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/hair/hair_man_{str(try_on_data.hair_code).zfill(3)}.png'
         hair_mask_path = f'C:/Users/omocomo/Documents/GitHub/Virtual-Clothing-Try-On/FastAPI/DATA/hair/hair_mask_{str(try_on_data.hair_code).zfill(3)}.png'
-        final_image = HairSwap(hair_man_path, output_path, hair_mask_path)
+        if try_on_data.hair_code in [1, 2, 6]: # remove_top
+            final_image = HairSwap(hair_man_path, output_top_path, hair_mask_path)
+        else: # remove_all
+            final_image = HairSwap(hair_man_path, output_all_path, hair_mask_path)
 
     print(final_image)
         

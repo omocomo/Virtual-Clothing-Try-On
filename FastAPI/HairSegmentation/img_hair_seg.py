@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from model import MobileHairNet
 from evaluate import evaluateOne
 from dataset import ImgTransformer
+import numpy as np
 
 import cv2
 
@@ -15,6 +16,15 @@ DIR_PATH = os.path.dirname(__file__)
 USE_CUDA = torch.cuda.is_available()
 device = torch.device("cuda" if USE_CUDA else "cpu")
 
+# 입력: RGB 이미지
+# 출력: 투명도 채널을 추가한 RGB 이미지
+def AddAlphaChannel(image, mask_pred):
+    r_channel, g_channel, b_channel = cv2.split(image)
+    alpha_channel = mask_pred * np.ones(r_channel.shape, dtype=r_channel.dtype) # * 255
+    image = cv2.merge((r_channel, g_channel, b_channel, alpha_channel))
+    # cv2.imshow(image)
+
+    return image
 
 def build_model(checkpoint):
     model = MobileHairNet()
@@ -43,10 +53,13 @@ def run_img(img_path, model):
     img_name = img_path.split('/')[-1].split('.')[0]
     ex = img_path.split('/')[-1].split('.')[1]
 
+    # add alpha
+    hair_masked_img = AddAlphaChannel(hair_masked_img, mask_pred)
+
     # cv2.imwrite(f"./outputs/{img_name}_hair_mask.png", mask_pred)
     # cv2.imwrite(f"./outputs/{img_name}_original_img.png", original_img)
     print(f"./DATA/hair/{img_name}.{ex}")
-    cv2.imwrite(f"./DATA/hair/{img_name}.{ex}", hair_masked_img)
+    cv2.imwrite(f"./DATA/hair/{img_name}.png", hair_masked_img)
 
 
 def img_hair_seg(img_path):
