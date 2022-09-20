@@ -26,9 +26,31 @@ class HomePage extends StatelessWidget {
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => LoginPage()));
+                // set up the button
+                Widget okButton = TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => LoginPage()));
+                      },
+                );
+
+                AlertDialog alert = AlertDialog(
+                  title: Text("로그아웃"),
+                  content: Text("로그아웃 하시겠습니까?"),
+                  actions: [
+                    okButton,
+                  ],
+                );
+
+                // show the dialog
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return alert;
+                  },
+                );
               },
             ),
             actions: <Widget>[
