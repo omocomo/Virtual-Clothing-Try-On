@@ -15,6 +15,7 @@ DATA_DIR = os.path.join(BASE_DIR,'DATA/')
 
 server = 'localhost'
 
+# Directory
 HAIR_DIR = os.path.join(DATA_DIR,'hair/')
 SERVER_HAIR_DIR = os.path.join(f'http://{server}:8000/','DATA/','hair/')
 MODEL_DIR = os.path.join(DATA_DIR,'model/')
@@ -35,6 +36,9 @@ SERVER_SWAP_DIR = os.path.join(f'http://{server}:8000/','DATA/','swap/')
 
 router = APIRouter()
 
+# 회원가입 / 프로필 수정 시 사용자 이미지가 업로드 되면
+# 1. user 이미지를 저장하고
+# 2. user 이미지에 Hair Segmentation을 수행해 hair_mask를 저장
 @router.post('/user_image_upload')
 async def user_image_upload(in_files: List[UploadFile] = File(...)): 
     # 사용자 이미지 입력 받고 저장
@@ -51,6 +55,7 @@ async def user_image_upload(in_files: List[UploadFile] = File(...)):
     result = {'imgUrl' : img_url}
     return result
 
+### 이미지 GET ###
 @router.get('/DATA/output/{file_name}')
 def get_image(file_name:str):
     return FileResponse(''.join([OUTPUT_DIR, file_name]))
@@ -70,17 +75,10 @@ def get_image(file_name:str):
 @router.get('/DATA/user/{file_name}')
 def get_image(file_name:str):
     return FileResponse(''.join([USER_DIR, file_name]))
+#################
 
-class TryOnData(BaseModel):
-    model_image: str
-    user_image: str
-    hair_code: int
 
-class FaceSwap(BaseModel):
-    model_image: str
-    user_image: str
-    gender: str
-
+# 성별에 따라 원본 모델 이미지 보여주기
 class Original(BaseModel):
     model_image: str
     gender: str
@@ -99,7 +97,18 @@ async def print_original(original: Original):
     result = {'outputName' : f'temp_{model_image_name}'}
     return result
 
+# 입어보기 실행 시, Face Swapping 수행
+class FaceSwap(BaseModel):
+    model_image: str
+    user_image: str
+    gender: str
 
+# 처음으로 Face Swapping 할 때,
+# 모델 이미지 origin / remove_all / remove_top 각각에 모두 수행
+# origin: 원본 모델 이미지
+# remove_all: 모델 머리카락 전체 제거
+# remove_top: 모델 머리카락 윗 부분만 제거
+# 헤어 스타일에 따라 3가지 중 어디에 적용할지 달라짐
 @router.post('/face_swapping')
 async def face_swapping(face_swap: FaceSwap): 
     print(face_swap.model_image)
@@ -136,6 +145,12 @@ async def face_swapping(face_swap: FaceSwap):
     result = {'outputName' : output_image_name_origin + '.jpg'}
     return result
 
+# 헤어 스타일 적용하기
+# 모델 이미지, 사용자 이미지, 적용할 헤어 스타일에 따라서 적용
+class TryOnData(BaseModel):
+    model_image: str
+    user_image: str
+    hair_code: int
 
 @router.post('/change_hair')
 async def change_hair(try_on_data: TryOnData): 
